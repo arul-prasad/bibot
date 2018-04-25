@@ -48,8 +48,8 @@ var bot = new builder.UniversalBot(connector,
 bot.set('storage', tableStorage);
 
 // Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId || 'b28fc6c7-fb75-4eb6-ad29-d893fd16f456';
-var luisAPIKey = process.env.LuisAPIKey || '138ed6a9de184a63a96a91db4616ab5a';
+var luisAppId = process.env.LuisAppId;
+var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
