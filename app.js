@@ -154,20 +154,20 @@ bot.dialog('Bi.Hype.Trend', [
         setTimeout(() => {
             hype.trend = {
                 prospects : [ {
-                    date : '25/4/2018',
+                    date : '26/4/2018',
                     count : '1000'
                 },
                 {
-                    date : '24/4/2018',
+                    date : '25/4/2018',
                     count : '980'
                 },
                 {
-                    date : '23/4/2018',
+                    date : '24/4/2018',
                     count : '996'
                 }],
                 link  : {
-                     url : 'http://bing.com', 
-                     image : 'http://aka.ms/Fo983c' 
+                     url : 'https://x-net.bansel.it/onboarding/hype/trends', 
+                     image : 'https://i.imgur.com/BFHqAEI.png' 
                 }
             }
             session.send('new prospects trends for **%s** on **%s** \n * %s -> %s \n * %s -> %s \n * %s -> %s \n\n [For more ...](%s) \n\n ![%s](%s)',
@@ -269,11 +269,21 @@ bot.dialog("Bi.Normative.Query", [
         session.sendTyping();
         setTimeout( () => {
             session.dialogData.normativeData = {
-                url : 'http://bing.com',
-                normativeProduct : normativeProduct ? normativeProduct : ''
+                yammerConversations : ['https://www.yammer.com/sella.it/threads/978252414' , 
+                        'https://www.yammer.com/sella.it/threads/1057172054',
+                        'https://www.yammer.com/sella.it/threads/1040266535'],
+                normativeProduct : normativeProduct ? normativeProduct.entity : 'gdpr',
+                urls : ['https://www.csoonline.com/article/3202771/data-protection/general-data-protection-regulation-gdpr-requirements-deadlines-and-facts.html',
+                        'https://en.wikipedia.org/wiki/General_Data_Protection_Regulation']
             };
             var normativeData = session.dialogData.normativeData;
-            session.send('here is the regulations detail %s', normativeData.url);
+            session.send('here are the **regulations for %s** yammer conversations are %s \n %s \n %s \n \n other resources are \n %s \n %s ', 
+                normativeData.normativeProduct, 
+                normativeData.yammerConversations[0],
+                normativeData.yammerConversations[1],
+                normativeData.yammerConversations[2], 
+                normativeData.urls[0], 
+                normativeData.urls[1]);
         }, 2000)
     }
 ]).triggerAction({
@@ -287,8 +297,11 @@ bot.dialog("Bi.Phone.Query", [
         var intent = args.intent;
         var currentUser = session.message.address.user.name; 
         var phoneUser = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.Phone.User');
+        if(!session.dialogData.phoneUserData) {
+            session.dialogData.phoneUserData = {}
+        }
         session.sendTyping();
-        if(phoneUser || session.dialogData.phoneUserData) {
+        if(phoneUser || session.dialogData.phoneUserData.user) {
             setTimeout(() => {
                 session.dialogData.phoneUserData = {
                     user : phoneUser ? phoneUser : '',
@@ -307,8 +320,98 @@ bot.dialog("Bi.Phone.Query", [
         var phoneUserData = session.dialogData.phoneUserData;
         if (results.response) {
             phoneUserData.user = results.response;
+            session.sendTyping();
+            if(phoneUserData.user) {
+                phoneUserData.extension = 46
+                setTimeout(() => {
+                    session.send('extension Pier %s ', phoneUserData.extension);
+                },3000);
+            }
         }
     },
 ]).triggerAction({
     matches : 'Bi.Phone.Query'
+});
+
+bot.dialog("Bi.HR.Reporting", [
+    function(session, args, next) {
+        // Resolve and store any Bi.Normative.Greet entity passed from LUIS.
+        var intent = args.intent;
+        var currentUser = session.message.address.user.name; 
+        var user = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.HR.User');
+        if(!session.dialogData.user) {
+            session.dialogData.user = { }
+        }
+        session.sendTyping();
+        setTimeout(() => {
+            if(session.dialogData.user == 'arul prasad') {
+                session.dialogData.user = {
+                    name : user ? user : currentUser,
+                    manager : 'Sudhakar',
+                    area : 'IT CanaliDigitale'
+                };
+            }else {
+                session.dialogData.user = {
+                    name : user ? user : currentUser,
+                    manager : 'Barath',
+                    area : 'IT Sispe'
+                };
+            } 
+            var userData = session.dialogData.user;
+            session.send('%s reporting to %s working in %s', userData.name, userData.manager, userData.area);
+        },3000);
+    } 
+]).triggerAction({
+    matches : 'Bi.HR.Reporting'
+});
+
+bot.dialog("Bi.HR.Responsible", [
+    function(session, args, next) {
+        // Resolve and store any Bi.Normative.Greet entity passed from LUIS.
+        var intent = args.intent;
+        var currentUser = session.message.address.user.name; 
+        var area = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.Hr.Area');
+        var project = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.Hr.Project');
+        if(!session.dialogData.responsible) {
+            session.dialogData.responsible = {
+                user : currentUser,
+                area : area ? area.entity : '' ,
+                name : 'Sudhakar',
+                project : project ? project.entity : ''
+            };
+        }
+
+        if(area) {
+            session.sendTyping();
+            setTimeout(() => {
+                session.send('%s is responsible for %s', 
+                    session.dialogData.responsible.name,
+                    session.dialogData.responsible.area);
+            },3000);
+        } else if(project) {
+            session.sendTyping();
+            setTimeout(() => {
+                session.send('%s is responsible for %s',
+                    session.dialogData.responsible.name, 
+                    session.dialogData.responsible.project);
+            },3000);
+        }
+    } 
+]).triggerAction({
+    matches : 'Bi.HR.Responsible'
+});
+
+
+bot.dialog("Bi.Apm.SOA", [
+    function(session, args, next) {
+        // Resolve and store any Bi.Normative.Greet entity passed from LUIS.
+        setTimeout(() => {
+            session.dialogData.soaStats 
+            session.send('%s is responsible for %s',
+            session.dialogData.responsible.name, 
+            session.dialogData.responsible.project);
+        },3000);
+    }
+]).triggerAction({
+    matches : 'Bi.Apm.SOA'
 });
