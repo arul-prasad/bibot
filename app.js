@@ -39,7 +39,7 @@ var bot = new builder.UniversalBot(connector,
     
     function(session,results) {
 
-     session.send("Hi! I'm the BI Bot. I able to give you on insights on Hype products Live");
+     session.send("Hi! I'm the Sella Enterprise Bot, not able to understand your request, will be trained and able to response");
 
     // If the object for storing notes in session.userData doesn't exist yet, initialize it
     }
@@ -48,8 +48,8 @@ var bot = new builder.UniversalBot(connector,
 bot.set('storage', tableStorage);
 
 // Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
+var luisAppId = process.env.LuisAppId || 'f9efdacc-aee8-491a-9236-8daac572a551';
+var luisAPIKey = process.env.LuisAPIKey || 'd4f4113afc974a5bbcd6eb0489c921a4';
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
@@ -66,7 +66,7 @@ bot.recognizer(recognizer);
 bot.dialog('firstRun', function (session) {    
     session.userData.firstRun = true;
     var currentUser = session.message.address.user.name; 
-    var welcomeMsg = 'Welcome %s to Sella Bi Bot, i am trained to give you BI insights on all Hype products!, Type Hype or any question on Hype insights'
+    var welcomeMsg = 'Welcome %s to Sella Enterprise Bot, Type your question for your information hands on'
     session.send(welcomeMsg,currentUser).endDialog();
 }).triggerAction({
     onFindAction: function (context, callback) {
@@ -79,8 +79,6 @@ bot.dialog('firstRun', function (session) {
         }
     }
 });
-
-
 
 bot.dialog('Bi.Hype.Greet', [
     function (session, args, next) {
@@ -172,8 +170,8 @@ bot.dialog('Bi.Hype.Trend', [
                      image : 'http://aka.ms/Fo983c' 
                 }
             }
-            session.send('Recent trends for %s \n * %s -> %s \n * %s -> %s \n * %s -> %s \n\n [For more ...](%s) \n\n ![%s](%s)',
-                    hype.type, hype.trend.prospects[0].date, hype.trend.prospects[0].count,
+            session.send('new prospects trends for **%s** on **%s** \n * %s -> %s \n * %s -> %s \n * %s -> %s \n\n [For more ...](%s) \n\n ![%s](%s)',
+                    hype.type, hype.timeLine, hype.trend.prospects[0].date, hype.trend.prospects[0].count,
                     hype.trend.prospects[1].date, hype.trend.prospects[1].count,
                     hype.trend.prospects[2].date, hype.trend.prospects[2].count,
                     hype.trend.link.url,
@@ -189,202 +187,128 @@ bot.dialog('Bi.System.Monitor', [
         // Resolve and store any Bi.Hype.Greet entity passed from LUIS.
         var intent = args.intent;
         var currentUser = session.message.address.user.name; 
-        if(currentUser.toLowerCase() == 'arul' || currentUser.toLowerCase() == 'user') 
+        if(currentUser.toLowerCase() == 'arul prasad' || currentUser.toLowerCase() == 'user') 
         {
-            var server = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.System.Server');
-            session.dialogData.systemUsage = {
-                server : server ? server : 'dcprdp',
-                nodes : [
-                    { 
-                        name : 'dcprdp01',
-                        cpu : '7%',
-                        availablity : '100%',
-                        avgResponse : '200ms'
-                    },
-                    { 
-                        name : 'dcprdp02',
-                        cpu : '6%',
-                        availablity : '100%',
-                        avgResponse : '210ms'
-                    }, 
-                    { 
-                        name : 'dcprdp03',
-                        cpu : '10%',
-                        availablity : '100%',
-                        avgResponse : '220ms'
-                    }                 
-                ],
-                link  : {
-                    url : 'http://bing.com', 
-                    image : 'http://aka.ms/Fo983c' 
-               } 
-            };
-            var systemUsage = session.dialogData.systemUsage;
             session.sendTyping();
-            session.send('**%s** \n '+ 
-                         '* CPU -> %s \n '+ 
-                         '* availablity -> %s \n ' +
-                         '* avgResponse -> %s \n\n ' +
-                         '\n **%s** \n '+
-                         '* CPU -> %s \n '+ 
-                         '* availablity -> %s \n ' +
-                         '* avgResponse -> %s \n\n ' +
-                         '\n **%s** \n '+
-                         '* CPU -> %s \n '+ 
-                         '* availablity -> %s \n ' +
-                         '* avgResponse -> %s \n\n ' +
-                         '[For more ...](%s) \n\n' + 
-                         '![%s](%s)',
-                    systemUsage.nodes[0].name, 
-                    systemUsage.nodes[0].cpu,
-                    systemUsage.nodes[0].availablity, 
-                    systemUsage.nodes[0].avgResponse,
-                    systemUsage.nodes[1].name,
-                    systemUsage.nodes[1].cpu,
-                    systemUsage.nodes[1].availablity, 
-                    systemUsage.nodes[1].avgResponse,
-                    systemUsage.nodes[2].name,
-                    systemUsage.nodes[2].cpu,
-                    systemUsage.nodes[2].availablity, 
-                    systemUsage.nodes[2].avgResponse,
-                    systemUsage.link.url,
-                    systemUsage.server,
-                    systemUsage.link.image);
-        } else {
-            session.send('Sorry required a system admin profile to fetch system usage')
-        }
+            var server = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.System.Server');
+            setTimeout(() => {
+                session.dialogData.systemUsage = {
+                    server : server ? server : 'dcprdp',
+                    nodes : [
+                        { 
+                            name : 'dcprdp01',
+                            cpu : '7%',
+                            availablity : '100%',
+                            avgResponse : '200ms'
+                        },
+                        { 
+                            name : 'dcprdp02',
+                            cpu : '6%',
+                            availablity : '100%',
+                            avgResponse : '210ms'
+                        }, 
+                        { 
+                            name : 'dcprdp03',
+                            cpu : '10%',
+                            availablity : '100%',
+                            avgResponse : '220ms'
+                        }                 
+                    ],
+                    link  : {
+                        url : 'https://www.manageengine.com/network-monitoring/images/network-performance-monitoring.gif', 
+                        image : 'https://www.manageengine.com/network-monitoring/images/network-performance-monitoring.gif' 
+                } 
+                };
+                var systemUsage = session.dialogData.systemUsage;
+                session.send('**%s** \n '+ 
+                            '* CPU -> %s \n '+ 
+                            '* availablity -> %s \n ' +
+                            '* avgResponse -> %s \n\n ' +
+                            '\n **%s** \n '+
+                            '* CPU -> %s \n '+ 
+                            '* availablity -> %s \n ' +
+                            '* avgResponse -> %s \n\n ' +
+                            '\n **%s** \n '+
+                            '* CPU -> %s \n '+ 
+                            '* availablity -> %s \n ' +
+                            '* avgResponse -> %s \n\n ' +
+                            '[For more ...](%s) \n\n' + 
+                            '![%s](%s)',
+                        systemUsage.nodes[0].name, 
+                        systemUsage.nodes[0].cpu,
+                        systemUsage.nodes[0].availablity, 
+                        systemUsage.nodes[0].avgResponse,
+                        systemUsage.nodes[1].name,
+                        systemUsage.nodes[1].cpu,
+                        systemUsage.nodes[1].availablity, 
+                        systemUsage.nodes[1].avgResponse,
+                        systemUsage.nodes[2].name,
+                        systemUsage.nodes[2].cpu,
+                        systemUsage.nodes[2].availablity, 
+                        systemUsage.nodes[2].avgResponse,
+                        systemUsage.link.url,
+                        systemUsage.server,
+                        systemUsage.link.image);
+                    },3000);
+                } else {
+                    session.send('Sorry required a system admin profile to fetch system usage')
+                }
     }
         
 ]).triggerAction({
     matches : 'Bi.System.Monitor'
 })
 
-/*bot.dialog('CreateNote', [
-    function (session, args, next) {
-        // Resolve and store any Note.Title entity passed from LUIS.
+
+bot.dialog("Bi.Normative.Query", [
+    function(session, args, next) {
+        // Resolve and store any Bi.Normative.Greet entity passed from LUIS.
         var intent = args.intent;
-        var title = builder.EntityRecognizer.findEntity(intent.entities, 'Note.Title');
+        var currentUser = session.message.address.user.name; 
+        var normativeProduct = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.Normative.Product');
+        session.sendTyping();
+        setTimeout( () => {
+            session.dialogData.normativeData = {
+                url : 'http://bing.com',
+                normativeProduct : normativeProduct ? normativeProduct : ''
+            };
+            var normativeData = session.dialogData.normativeData;
+            session.send('here is the regulations detail %s', normativeData.url);
+        }, 2000)
+    }
+]).triggerAction({
+    matches : 'Bi.Normative.Query'
+});
 
-        var note = session.dialogData.note = {
-          title: title ? title.entity : null,
-        };
-        
-        // Prompt for title
-        if (!note.title) {
-            builder.Prompts.text(session, 'What would you like to call your note?');
+
+bot.dialog("Bi.Phone.Query", [
+    function(session, args, next) {
+        // Resolve and store any Bi.Normative.Greet entity passed from LUIS.
+        var intent = args.intent;
+        var currentUser = session.message.address.user.name; 
+        var phoneUser = builder.EntityRecognizer.findEntity(intent.entities, 'Bi.Phone.User');
+        session.sendTyping();
+        if(phoneUser || session.dialogData.phoneUserData) {
+            setTimeout(() => {
+                session.dialogData.phoneUserData = {
+                    user : phoneUser ? phoneUser : '',
+                    extension : 46
+                };
+                var phoneUserData = session.dialogData.phoneUserData;
+                session.send('extension Pier %s ', phoneUserData.extension);
+            },3000);
         } else {
+            builder.Prompts.text(session, 'give me the name of person to search his extension');
             next();
         }
-    },
+    } , 
+
     function (session, results, next) {
-        var note = session.dialogData.note;
+        var phoneUserData = session.dialogData.phoneUserData;
         if (results.response) {
-            note.title = results.response;
-        }
-
-        // Prompt for the text of the note
-        if (!note.text) {
-            builder.Prompts.text(session, 'What would you like to say in your note?');
-        } else {
-            next();
+            phoneUserData.user = results.response;
         }
     },
-    function (session, results) {
-        var note = session.dialogData.note;
-        if (results.response) {
-            note.text = results.response;
-        }
-        
-        // If the object for storing notes in session.userData doesn't exist yet, initialize it
-        if (!session.userData.notes) {
-            session.userData.notes = {};
-            console.log("initializing session.userData.notes in CreateNote dialog");
-        }
-        // Save notes in the notes object
-        session.userData.notes[note.title] = note;
-
-        // Send confirmation to user
-        session.endDialog('Creating note named "%s" with text "%s"',
-            note.title, note.text);
-    }
-]).triggerAction({ 
-    matches: 'Note.Create',
-    confirmPrompt: "This will cancel the creation of the note you started. Are you sure?" 
-}).cancelAction('cancelCreateNote', "Note canceled.", {
-    matches: /^(cancel|nevermind)/i,
-    confirmPrompt: "Are you sure?"
-});
-
-bot.dialog('DeleteNote', [
-    function (session, args, next) {
-        if (noteCount(session.userData.notes) > 0) {
-            // Resolve and store any Note.Title entity passed from LUIS.
-            var title;
-            var intent = args.intent;
-            var entity = builder.EntityRecognizer.findEntity(intent.entities, 'Note.Title');
-            if (entity) {
-                // Verify that the title is in our set of notes.
-                title = builder.EntityRecognizer.findBestMatch(session.userData.notes, entity.entity);
-            }
-            
-            // Prompt for note name
-            if (!title) {
-                builder.Prompts.choice(session, 'Which note would you like to delete?', session.userData.notes);
-            } else {
-                next({ response: title });
-            }
-        } else {
-            session.endDialog("No notes to delete.");
-        }
-    },
-    function (session, results) {
-        delete session.userData.notes[results.response.entity];        
-        session.endDialog("Deleted the '%s' note.", results.response.entity);
-    }
 ]).triggerAction({
-    matches: 'Note.Delete'
-}).cancelAction('cancelDeleteNote', "Ok - canceled note deletion.", {
-    matches: /^(cancel|nevermind)/i
+    matches : 'Bi.Phone.Query'
 });
-
-bot.dialog('ReadNote', [
-    function (session, args, next) {
-        if (noteCount(session.userData.notes) > 0) {
-           
-            // Resolve and store any Note.Title entity passed from LUIS.
-            var title;
-            var intent = args.intent;
-            var entity = builder.EntityRecognizer.findEntity(intent.entities, 'Note.Title');
-            if (entity) {
-                // Verify it's in our set of notes.
-                title = builder.EntityRecognizer.findBestMatch(session.userData.notes, entity.entity);
-            }
-            
-            // Prompt for note name
-            if (!title) {
-                builder.Prompts.choice(session, 'Which note would you like to read?', session.userData.notes);
-            } else {
-                next({ response: title });
-            }
-        } else {
-            session.endDialog("No notes to read.");
-        }
-    },
-    function (session, results) {        
-        session.endDialog("Here's the '%s' note: '%s'.", results.response.entity, session.userData.notes[results.response.entity].text);
-    }
-]).triggerAction({
-    matches: 'Note.ReadAloud'
-}).cancelAction('cancelReadNote', "Ok.", {
-    matches: /^(cancel|nevermind)/i
-});
-
-
-function noteCount(notes) {
-
-    var i = 0;
-    for (var name in notes) {
-        i++;
-    }
-    return i;
-} */
